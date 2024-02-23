@@ -1,12 +1,11 @@
-from flask import Flask, request, jsonify
-import schedule
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import json
 import time
-
-app = Flask(__name__)
+import threading
 
 command = "Hello"
-
 start_time = time.time()
+lock = threading.Lock()
 
 def change_command():
     global command
@@ -15,26 +14,56 @@ def change_command():
     else:
         command = "Hello"
 
-@app.route('/api_endpoint', methods=['GET', 'POST'])
-def handle_api_request():
+class RequestHandler(BaseHTTPRequestHandler):
+    def _send_response(self, message, data=None):
+        response = {
+            "message": message,
+            "command": command if self.command_request() else None,
+            "data": data if self.data_request() else None
+        }
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps(response).encode('utf-8'))
 
-    # Schedule a job to change the command every 5 seconds
-    global start_time
-    millis = int(round(time.time() * 1000))
-    if millis - start_time > 1000:
-        start_time = millis
-        change_command()
+    def command_request(self):
+        return self.path == '/api_endpoint' and self.command == 'GET'
 
-    if request.method == 'GET':
-        result = {"message": "Received command successfully", "command": command}
-    elif request.method == 'POST':
-        data = request.get_json()
-        result = {"message": "Received data successfully", "data": data}
-    else:
-        result = {"error": "Unsupported request method"}
+    def data_request(self):
+        return self.path == '/api_endpoint' and self.command == 'POST'
 
-    return jsonify(result)
+    def do_GET(self):
+        if self.command_request():
+            self._send_response("Received command successfully")
+
+    def do_POST(self):
+        if self.data_request():
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length).decode('utf-8')
+            try:
+                data = json.loads(post_data)
+                self._send_response("Received data successfully", data)
+            except json.JSONDecodeError:
+                self._send_response("Error decoding JSON", None)
+
+def schedule_task():
+    while True:
+        time.sleep(5)
+        with lock:
+            change_command()
 
 if __name__ == '__main__':
-    # Run the Flask application on all available network interfaces
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    server_address = ('', 5000)
+    httpd = HTTPServer(server_address, RequestHandler)
+
+    # Start a separate thread for the scheduled task
+    task_thread = threading.Thread(target=schedule_task, daemon=True)
+    task_thread.start()
+
+    print('Starting server on port 5000...')
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        httpd.server_close()
