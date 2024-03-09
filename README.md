@@ -1,5 +1,3 @@
-# Restaurant-Robot-Working
-
 <body>
 
   <p>
@@ -25,6 +23,15 @@
   <p>
     The restaurant robot's device architecture includes a robotic platform, control system, and communication methods. The robotic platform consists of a control circuit, stable chassis, rubber-gripped wheels, and food compartments. The control system utilizes microcontrollers, motor drivers, high RPM motors with odometer encoders, and a suitable power supply. Communication methods include local network communication, swarm technology compatibility, and microcontroller-to-microcontroller communication (UART).
   </p>
+
+  <h2>Group Members</h2>
+  <ul>
+    <li>210174X Gallella MMHHB</li>
+    <li>210218M Herath HMSI</li>
+    <li>210205V Haputhanthri HLNB</li>
+    <li>210069F Basnayake BYN</li>
+    <li>210629A Thamirawaran S</li>
+  </ul>
 
   <h2>Research and Literature Review</h2>
   <p>
