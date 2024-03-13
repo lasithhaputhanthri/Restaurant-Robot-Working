@@ -3,7 +3,7 @@ float RateRoll, RatePitch, RateYaw;
 float RateCalibrationRoll, RateCalibrationPitch, RateCalibrationYaw;
 int RateCalibrationNumber;
 float AccX, AccY, AccZ;
-float AngleRoll, AnglePitch
+float AngleRoll, AnglePitch;
 uint32_t LoopTimer;
 float KalmanAngleRoll = 0, KalmanUncertaintyAngleRoll = 2 * 2;
 float KalmanAnglePitch = 0, KalmanUncertaintyAnglePitch = 2 * 2;
