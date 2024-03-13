@@ -18,14 +18,16 @@ BLA::Matrix<2,1> S; BLA::Matrix<1,2> H;
 BLA::Matrix<2,2> I; BLA::Matrix<1,1> Acc;
 BLA::Matrix<2,1> K; BLA::Matrix<1,1> R;
 BLA::Matrix<1,1> L; BLA::Matrix<1,1> M;
+BLA::Matrix<1,1> LI;
+BLA::Matrix<2,2> GI={100,0,0,100};
 void kalman_2d(void) {
   Acc = { AccZInertial };
   S = F * S + G * Acc;
   P = F * P * ~F + Q;
   L = H * P * ~H + R;
-  
-  
-  K = P * ~H * Invert(L);
+  LI=L;
+  Invert(LI);
+  K = P * ~H * LI;
   M = { AltitudeBarometer };
   S = S + K * (M - H * S);
   AltitudeKalman = S(0, 0);
@@ -155,7 +157,7 @@ void setup() {
   H = { 1, 0 };
   I = { 1, 0,
         0, 1 };
-  Q = G * ~G *10*10  ;
+  Q = G * ~G *GI  ;
   R = { 30 * 30 };
   P = { 0, 0,
         0, 0 };
