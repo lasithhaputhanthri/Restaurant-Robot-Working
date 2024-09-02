@@ -1,0 +1,19 @@
+﻿Board Layer Stack
+Number,Name,Type,Material,Thickness (mil),Weight (oz),Dk,Orientation,Copper Orientation
+,Top Overlay,Overlay,,,,,,
+,Top Solder,Solder Mask,Solder Resist,0.4,,3.5,,
+1,Top Layer,Signal,,0.689,0.5,,Top,Above
+,Dielectric 1,Dielectric,FR-4,12.6,,4.8,,
+2,Bottom Layer,Signal,,0.689,0.5,,Bottom,Below
+,Bottom Solder,Solder Mask,Solder Resist,0.4,,3.5,,
+,Bottom Overlay,Overlay,,,,,,
+
+
+No impedances
+
+Via types
+#,Name,Type,Layers,Stack
+1,Thru 1:2,Thru,Top Layer-Bottom Layer,Board Layer Stack
+
+
+No back drills
